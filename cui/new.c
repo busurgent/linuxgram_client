@@ -1,5 +1,7 @@
 #include <cdk.h>
 #include <cdk/cdkscreen.h>
+#include <cdk/entry.h>
+#include <cdk/label.h>
 #include <ncurses.h>
 #include <string.h>
 
@@ -13,11 +15,15 @@ int authorize(char *username, char *pass) { return !strcmp(username, pass); }
 
 void login_menu(CDKSCREEN *screen) {
   CDKENTRY *login_entry =
-      newCDKEntry(screen, CENTER, 14, "</B>Username<!B>", "", A_NORMAL, ' ',
+      newCDKEntry(screen, CENTER, CENTER, "</B>Username<!B>", "", A_NORMAL, ' ',
                   vMIXED, 21, 6, 20, FALSE, FALSE);
   CDKENTRY *password_entry =
-      newCDKEntry(screen, CENTER, 16, "</B>Password<!B>", "", A_NORMAL, ' ',
+      newCDKEntry(screen, CENTER, CENTER, "</B>Password<!B>", "", A_NORMAL, ' ',
                   vHMIXED, 21, 6, 20, FALSE, FALSE);
+  moveCDKEntry(login_entry, -3, 0, TRUE, TRUE);
+  moveCDKEntry(password_entry, 3, 0, TRUE, TRUE);
+  char *s[2] = {"<C></31>Wrong username or password<!31>", NULL};
+  CDKLABEL *label = newCDKLabel(screen, CENTER, BOTTOM, s, 1, false, false);
   /*CDKBUTTON *button =
       newCDKButton(screen, CENTER, 18, "Log in", NULL, FALSE, FALSE);
   bindCDKObject(vBUTTON, button, 9, callback, login_entry);
@@ -33,14 +39,13 @@ void login_menu(CDKSCREEN *screen) {
     refreshCDKScreen(screen);
     if (authorize(login, pass))
       break;
-    mvprintw(20, 55, "Wrong username or password");
+    drawCDKLabel(label, FALSE);
     refresh();
   }
   destroyCDKEntry(login_entry);
   destroyCDKEntry(password_entry);
+  destroyCDKLabel(label);
   // destroyCDKButton(button);
-  mvprintw(20, 55, "                          ");
-  move(0, 0);
 }
 
 void main_window(CDKSCREEN *screen) {
@@ -53,8 +58,8 @@ void main_window(CDKSCREEN *screen) {
 
 int main() {
   CDKSCREEN *screen;
-  // WINDOW *win;
-  screen = initCDKScreen(NULL);
+  WINDOW *win = initscr();
+  screen = initCDKScreen(win);
   login_menu(screen);
   main_window(screen);
   destroyCDKScreen(screen);
