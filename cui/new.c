@@ -58,6 +58,8 @@ void main_window(CDKSCREEN *screen) {
   CDKLABEL *label = newCDKLabel(screen, LEFT, TOP, s, 3, FALSE, FALSE);
   drawCDKLabel(label, TRUE);
   getch();
+  eraseCDKLabel(label);
+  refreshCDKScreen(screen);
   destroyCDKLabel(label);
 }
 
@@ -67,6 +69,7 @@ int main() {
   screen = initCDKScreen(win);
   login_menu(screen);
   main_window(screen);
+  eraseCDKScreen(screen);
   destroyCDKScreen(screen);
   endCDK();
   return 0;
