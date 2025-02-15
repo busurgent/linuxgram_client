@@ -40,8 +40,13 @@ void login_menu(CDKSCREEN *screen) {
     if (authorize(login, pass))
       break;
     drawCDKLabel(label, FALSE);
-    refresh();
+    // refresh();
+    refreshCDKScreen(screen);
   }
+  eraseCDKEntry(login_entry);
+  eraseCDKEntry(password_entry);
+  eraseCDKLabel(label);
+  refreshCDKScreen(screen);
   destroyCDKEntry(login_entry);
   destroyCDKEntry(password_entry);
   destroyCDKLabel(label);
